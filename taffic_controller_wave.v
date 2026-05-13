@@ -1,0 +1,32 @@
+module tb;
+
+reg clk,reset;
+wire [2:0] highway,road;
+
+traffic_controller DUT(clk,reset,highway,road);
+
+initial
+begin
+    clk = 0;
+    forever #5 clk = ~clk;
+end
+
+initial
+begin
+    reset = 1;
+    #10 reset = 0;
+    #100 $finish;
+end
+
+initial
+begin
+    $dumpfile("traffic.vcd");
+    $dumpvars(0,tb);
+end
+
+initial
+begin
+    $monitor($time," highway=%b, road=%b",highway,road);
+end
+
+endmodule

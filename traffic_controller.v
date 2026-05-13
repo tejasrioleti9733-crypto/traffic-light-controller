@@ -1,0 +1,64 @@
+module traffic_controller(clk,reset,highway,road);
+
+input clk,reset;
+output reg [2:0] highway,road;
+reg [1:0] state;
+
+parameter red = 3'b100,
+          yellow = 3'b010,
+          green = 3'b001;
+
+parameter s0 = 2'b00,
+          s1 = 2'b01,
+          s2 = 2'b10,
+          s3 = 2'b11;
+
+always@(posedge clk or posedge reset)
+begin
+    if(reset)
+        state <= s0;
+    else
+    begin
+        case(state)
+
+            s0: state <= s1;
+            s1: state <= s2;
+            s2: state <= s3;
+            s3: state <= s0;
+
+        endcase
+    end
+end
+
+always@(*)
+begin
+    case(state)
+
+        s0:
+        begin
+            highway = green;
+            road = red;
+        end
+
+        s1:
+        begin
+            highway = yellow;
+            road = red;
+        end
+
+        s2:
+        begin
+            highway = red;
+            road = green;
+        end
+
+        s3:
+        begin
+            highway = red;
+            road = yellow;
+        end
+
+    endcase
+end
+
+endmodule
